@@ -37,6 +37,14 @@ print_matrix(uint32_t N, long *m)
     }
 }
 
+uint64_t read_pmc(void) {
+    uint32_t eax, edx;
+    // Using counter 0 for L2 cache misses
+    rdpmc(0, eax, edx);
+    // Combine the low-order 32 bits EAX and high-order 32 bits EDX
+    return ((uint64_t)edx << 32) | eax;
+}
+
 /*
  *  main - program entry point
  *      @argc: number of arguments & program name
@@ -66,6 +74,7 @@ main(int32_t argc, char *argv[])
     t = clock();
 
     /* TODO: count L2 cache misses for the next block using RDPMC */
+    uint64_t l2_miss_count_start = read_pmc();
 
     /* perform slow multiplication */
     for (uint32_t i=0; i<N; ++i)             /* line   */
@@ -85,6 +94,9 @@ main(int32_t argc, char *argv[])
     t = clock();
 
     /* TODO: count L2 cache misses for the next block using RDPMC */
+    uint64_t l2_miss_count_end = read_pmc();
+    uint64_t l2_miss_count = l2_miss_count_end - l2_miss_count_start;
+    printf("L2 cache misses: %lu\n", l2_miss_count);
 
     /* perform fast(er) multiplication */
     for (uint32_t k=0; k<N; ++k)
