@@ -98,6 +98,10 @@ main(int32_t argc, char *argv[])
     uint64_t l2_miss_count = l2_miss_count_end - l2_miss_count_start;
     printf("L2 cache misses: %lu\n", l2_miss_count);
 
+
+    // Record the L2 cache misses for the next block
+    l2_miss_count_start = read_pmc();
+
     /* perform fast(er) multiplication */
     for (uint32_t k=0; k<N; ++k)
         for (uint32_t i=0; i<N; ++i)         /* line   */
@@ -109,6 +113,11 @@ main(int32_t argc, char *argv[])
 
     printf("Multiplication 2 finished in %6.2f s\n",
            ((float)t)/CLOCKS_PER_SEC); 
+
+    // Count L2 cache misses
+    l2_miss_count_end = read_pmc();
+    l2_miss_count = l2_miss_count_end - l2_miss_count_start;
+    printf("L2 cache misses: %lu\n", l2_miss_count);
 
     return 0;
 }
