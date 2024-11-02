@@ -32,7 +32,6 @@ int32_t usage(void) {
 }
 
 /*
- * print_matrix - if you need convincing that it works just fine
  * @N: square matrix size
  * @m: pointer to matrix
  */
