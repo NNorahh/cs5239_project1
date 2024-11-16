@@ -230,3 +230,6 @@ pyrightconfig.json
 
 # output folder
 output/
+
+# Mac OS
+.DS_Store
