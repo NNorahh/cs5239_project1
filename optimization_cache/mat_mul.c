@@ -4,44 +4,42 @@
 #include <string.h>     /* memset                         */
 #include <stdint.h>     /* uint32_t, uint64_t             */
 
-#define rdpmc(ecx, eax, edx)    \
-    asm volatile (              \
-        "rdpmc"                 \
-        : "=a"(eax),            \
-          "=d"(edx)             \
-        : "c"(ecx))
 #define TILE_SIZE 64
 #define ROW_SIZE 64
 
+void Tiling(int* r, int* m1, int* m2, int n) {
+    int i, j, k, i1, j1, k1;
+    for (i = 0; i < n; i += TILE_SIZE)
+        for (j = 0; j < n; j += TILE_SIZE)
+            for (k = 0; k < n; k += TILE_SIZE)
+                /* TILE_SIZE x TILE_SIZE mini matrix multiplications */
+                for (i1 = i; i1 < i + TILE_SIZE; i1++)
+                    for (j1 = j; j1 < j + TILE_SIZE; j1+=16)
+                        for (k1 = k; k1 < k + TILE_SIZE; k1++)
+                            r[i1 * n + j1] += m1[i1 * n + k1] * m2[k1 * n + j1];
+}
 
-void matrixMultiplyTiled(uint32_t N, int64_t *m1, int64_t *m2, int64_t *r) {
-    memset(r, 0, N * N * sizeof(int64_t));
 
-    for (uint32_t k = 0; k < N; k += TILE_SIZE) {
-        for (uint32_t i = 0; i < N; i += TILE_SIZE) {
-            for (uint32_t j = 0; j < N; j += TILE_SIZE) {
-
-                for (uint32_t k1 = k; k1 < k + TILE_SIZE && k1 < N; ++k1) {
-                    for (uint32_t i1 = i; i1 < i + TILE_SIZE && i1 < N; ++i1) {
-                        int64_t temp = m1[i1 * N + k1]; 
-
-                        for (uint32_t j1 = j; j1 < j + TILE_SIZE && j1 + 4 <= N; j1 += 4) {
-                            r[i1 * N + j1] += temp * m2[k1 * N + j1];
-                            r[i1 * N + j1 + 1] += temp * m2[k1 * N + j1 + 1];
-                            r[i1 * N + j1 + 2] += temp * m2[k1 * N + j1 + 2];
-                            r[i1 * N + j1 + 3] += temp * m2[k1 * N + j1 + 3];
+void matrixMultiplyTiled(uint32_t n, int64_t *m1, int64_t *m2, int64_t *r) {
+    int i, j, k, i1, j1, k1;
+    // Iterate over blocks in the matrices
+    for (i = 0; i < n; i += TILE_SIZE) {
+        for (j = 0; j < n; j += TILE_SIZE) {
+            for (k = 0; k < n; k += TILE_SIZE) {
+                // Perform multiplication within each tile using IJK order
+                for (i1 = i; i1 < i + TILE_SIZE && i1 < n; i1++) {
+                    for (j1 = j; j1 < j + TILE_SIZE && j1 < n; j1++) {
+                        int64_t sum = 0;  // Accumulate the product sum for the current (i1, j1)
+                        for (k1 = k; k1 < k + TILE_SIZE && k1 < n; k1++) {
+                            sum += m1[i1 * n + k1] * m2[k1 * n + j1];
                         }
-
-                        for (uint32_t j1 = j + (TILE_SIZE / 4) * 4; j1 < j + TILE_SIZE && j1 < N; ++j1) {
-                            r[i1 * N + j1] += temp * m2[k1 * N + j1];
-                        }
+                        r[i1 * n + j1] += sum;
                     }
                 }
             }
         }
     }
 }
-
 
 /*
  *  usage - how to run the program
@@ -50,7 +48,8 @@ void matrixMultiplyTiled(uint32_t N, int64_t *m1, int64_t *m2, int64_t *r) {
 int32_t
 usage(void)
 {
-    printf("\t./mat_mul <N>\n");
+    printf("\t./mat_mul <N> <algorithm>\n");
+    printf("\talgorithm: 1 = Original IJK, 2 = IKJ, 3 = Tiling\n");
     return -1;
 }
 
@@ -77,12 +76,15 @@ print_matrix(uint32_t N, long *m)
 int32_t
 main(int32_t argc, char *argv[])
 {
-    if (argc != 2)
+    if (argc != 3)
         return usage();
+
+    /* parse N and algorithm choice */
+    uint32_t N   = atoi(argv[1]);
+    int algorithm = atoi(argv[2]);
 
     /* allocate space for matrices */
     clock_t t;
-    uint32_t N   = atoi(argv[1]);
     int64_t  *m1 = malloc(N * N * sizeof(int64_t));
     int64_t  *m2 = malloc(N * N * sizeof(int64_t));
     int64_t  *r  = malloc(N * N * sizeof(int64_t));
@@ -97,46 +99,30 @@ main(int32_t argc, char *argv[])
     memset(r, 0, N * N * sizeof(int64_t));
     t = clock();
 
-
-    /* perform slow multiplication */
-    for (uint32_t i=0; i<N; ++i)             /* line   */
-        for (uint32_t j=0; j<N; ++j)         /* column */
-            for (uint32_t k=0; k<N; ++k)
-                r[i*N + j] += m1[i*N + k] * m2[k*N + j];
-
-    /* clock delta */
-    t = clock() - t;
-
-    printf("Multiplication 1 finished in %6.2f s\n",
-           ((float)t)/CLOCKS_PER_SEC);
-
-
-    /* result matrix clear; clock init */
-    memset(r, 0, N * N * sizeof(int64_t));
-    t = clock();
-
-
-    /* perform fast(er) multiplication */
-    /* change the loop order*/
-    for (uint32_t k=0; k<N; ++k)
-        for (uint32_t i=0; i<N; ++i)         /* line   */
-            for (uint32_t j=0; j<N; ++j)     /* column */
-                r[i*N + j] += m1[i*N + k] * m2[k*N + j];
+    /* perform multiplication based on selected algorithm */
+    if (algorithm == 1) {
+        // Original IJK multiplication
+        for (uint32_t i = 0; i < N; ++i)
+            for (uint32_t j = 0; j < N; ++j)
+                for (uint32_t k = 0; k < N; ++k)
+                    r[i*N + j] += m1[i*N + k] * m2[k*N + j];
+    }
+    else if (algorithm == 2) {
+        // Optimized IKJ multiplication
+        for (uint32_t k = 0; k < N; ++k)
+            for (uint32_t i = 0; i < N; ++i)
+                for (uint32_t j = 0; j < N; ++j)
+                    r[i*N + j] += m1[i*N + k] * m2[k*N + j];
+    }
+    else if (algorithm == 3) {
+        // Tiling multiplication
+        matrixMultiplyTiled(N, m1, m2, r);
+    } else {
+        return usage(); // invalid algorithm choice
+    }
 
     /* clock delta */
     t = clock() - t;
-
-    printf("Multiplication 2 finished in %6.2f s\n",
-           ((float)t)/CLOCKS_PER_SEC); 
-
-    t = clock();
-    /* perform fast(er) multiplication by tiling*/
-    /* tiling */
-    matrixMultiplyTiled(N, m1, m2, r);
-    /* clock delta */
-    t = clock() - t;
-    printf("Multiplication 3 finished in %6.2f s\n",
-           ((float)t)/CLOCKS_PER_SEC); 
-    
+    printf("Multiplication finished in %6.2f s\n", ((float)t)/CLOCKS_PER_SEC); 
     return 0;
 }
