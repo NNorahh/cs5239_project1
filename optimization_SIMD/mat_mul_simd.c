@@ -153,30 +153,65 @@ main(int32_t argc, char *argv[])
     printf("SIMD Multiplication 2 finished in %6.2f s\n",
         ((float)t) / CLOCKS_PER_SEC);
 
-    /* result matrix clear; clock init */
     memset(r, 0, N * N * sizeof(int64_t));
     t = clock();
-    int block = 32;
-    for (uint32_t i = 0; i < N; i += block) {
-        for (uint32_t j = 0; j < N; j += block) {
-            for (uint32_t i1 = i; i1 < i + block && i1 < N; i1++) {
-                for (uint32_t j1 = j; j1 < j + block && j1 < N; j1++) {
-                    __m512i res_vec = _mm512_setzero_si512();
-                    for (uint32_t k1 = 0; k1 < N; k1 += 16) {
-                        __m512i m1_vec = _mm512_loadu_si512((__m512i*)&m1[i1 * N + k1]);
-                        __m512i m2_vec = _mm512_loadu_si512((__m512i*)&m2[j1 * N + k1]);
-                        res_vec = _mm512_add_epi32(res_vec, _mm512_mullo_epi32(m1_vec, m2_vec));
-                    }
-                    int* p1 = (int*)&res_vec;
-                    r[i1 * N + j1] += (p1[0] + p1[1] + p1[2] + p1[3] + p1[4] + p1[5] + p1[6] + p1[7] +
-                                       p1[8] + p1[9] + p1[10] + p1[11] + p1[12] + p1[13] + p1[14] + p1[15]);
-                }
+    for (uint32_t i = 0; i < N; ++i) {
+        for (uint32_t j = 0; j < N; j += 8) {
+            __m512i sum = _mm512_setzero_si512();
+            for (uint32_t k = 0; k < N; ++k) {
+                __m512i m1_vec = _mm512_set1_epi64(m1[i * N + k]);
+                __m512i m2_vec = _mm512_loadu_si512((__m512i*)&m2[k * N + j]);
+                sum = _mm512_add_epi64(sum, _mm512_mullo_epi64(m1_vec, m2_vec));
+            }
+            _mm512_storeu_si512((__m512i*)&r[i * N + j], sum);
+        }
+    }
+    t = clock() - t;
+    printf("SIMD Multiplication 3 finished in %6.2f s\n",
+        ((float)t) / CLOCKS_PER_SEC);
+    memset(r, 0, N * N * sizeof(int64_t));
+    t = clock();
+
+    for (uint32_t i = 0; i < N; ++i) {
+        for (uint32_t k = 0; k < N; ++k) {
+            __m512i m1_vec = _mm512_set1_epi64(m1[i * N + k]);
+            for (uint32_t j = 0; j < N; j += 8) {
+                __m512i m2_vec = _mm512_loadu_si512((__m512i*)&m2[k * N + j]);
+                __m512i sum = _mm512_loadu_si512((__m512i*)&r[i * N + j]);
+                sum = _mm512_add_epi64(sum, _mm512_mullo_epi64(m1_vec, m2_vec));
+                _mm512_storeu_si512((__m512i*)&r[i * N + j], sum);
             }
         }
     }
     t = clock() - t;
-    printf("SIMD & Tiling(32) Multiplication finished in %6.2f s\n",
+    printf("SIMD Multiplication 4 finished in %6.2f s\n",
         ((float)t) / CLOCKS_PER_SEC);
+
+
+    /* result matrix clear; clock init */
+    // memset(r, 0, N * N * sizeof(int64_t));
+    // t = clock();
+    // int block = 32;
+    // for (uint32_t i = 0; i < N; i += block) {
+    //     for (uint32_t j = 0; j < N; j += block) {
+    //         for (uint32_t i1 = i; i1 < i + block && i1 < N; i1++) {
+    //             for (uint32_t j1 = j; j1 < j + block && j1 < N; j1++) {
+    //                 __m512i res_vec = _mm512_setzero_si512();
+    //                 for (uint32_t k1 = 0; k1 < N; k1 += 16) {
+    //                     __m512i m1_vec = _mm512_loadu_si512((__m512i*)&m1[i1 * N + k1]);
+    //                     __m512i m2_vec = _mm512_loadu_si512((__m512i*)&m2[j1 * N + k1]);
+    //                     res_vec = _mm512_add_epi32(res_vec, _mm512_mullo_epi32(m1_vec, m2_vec));
+    //                 }
+    //                 int* p1 = (int*)&res_vec;
+    //                 r[i1 * N + j1] += (p1[0] + p1[1] + p1[2] + p1[3] + p1[4] + p1[5] + p1[6] + p1[7] +
+    //                                    p1[8] + p1[9] + p1[10] + p1[11] + p1[12] + p1[13] + p1[14] + p1[15]);
+    //             }
+    //         }
+    //     }
+    // }
+    // t = clock() - t;
+    // printf("SIMD & Tiling(32) Multiplication finished in %6.2f s\n",
+    //     ((float)t) / CLOCKS_PER_SEC);
 
     return 0;
 }
