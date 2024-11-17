@@ -195,6 +195,7 @@ int32_t main(int32_t argc, char *argv[]) {
 
     double par_time = timer_end(&timer_par);
     printf("\n=== Parallel Multiplication Results ===\n");
+    printf("Number of threads: %u\n", num_threads);
     printf("Time: %6.2f seconds\n", par_time);
 
     /* Overall statistics */
