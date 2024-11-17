@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <omp.h>
-
+#include <string.h>
+#include <immintrin.h>
 int32_t usage(void) {
     printf("Usage: ./mat_mul <N> <num_threads>\n");
     return -1;
@@ -60,7 +61,8 @@ int main(int argc, char *argv[]) {
     double end_time = omp_get_wtime();  // 记录结束时间
     double single_thread_time = end_time - start_time;  // 计算单线程时间
     printf("Multiplication completed in: %.6f seconds\n", single_thread_time);
-
+    
+    memset(r1, 0, N * N * sizeof(int64_t));
     /* 并行矩阵乘法 */
     double parallel_start_time = omp_get_wtime();  // 记录并行开始时间
     #pragma omp parallel for collapse(2)
@@ -77,17 +79,26 @@ int main(int argc, char *argv[]) {
     double parallel_time = parallel_end_time - parallel_start_time;  // 计算并行时间
     printf("Multiplication2 completed in: %.6f seconds\n", parallel_time);
 
+    memset(r1, 0, N * N * sizeof(int64_t));
     /* 并行矩阵乘法 */
     double parallel_SIMD_start_time = omp_get_wtime();  // 记录并行开始时间
+    int64_t  *m2_T = malloc(N * N * sizeof(int64_t));
+    for (uint32_t i = 0; i < N; ++i) {
+        for (uint32_t j = 0; j < N; ++j) {
+            m2_T[j * N + i] = m2[i * N + j];
+        }
+    }
     #pragma omp parallel for collapse(2)
     for (uint32_t i = 0; i < N; i++) {
         for (uint32_t j = 0; j < N; j++) {
-            int64_t sum = 0;
-            #pragma omp simd reduction(+:sum)
-            for (uint32_t k = 0; k < N; k++) {
-                sum += m1[i * N + k] * m2[k * N + j];
+            __m512i sum = _mm512_setzero_si512();
+            for (uint32_t k = 0; k < N; k += 8) {
+                __m512i m1_vec = _mm512_loadu_si512((__m512i*)&m1[i * N + k]);
+                __m512i m2_vec = _mm512_loadu_si512((__m512i*)&m2_T[j * N + k]);
+                sum = _mm512_add_epi64(sum, _mm512_mullo_epi64(m1_vec, m2_vec));
             }
-            r1[i * N + j] = sum;
+        int64_t* p1 = (int64_t*)&sum;
+        r1[i * N + j] = p1[0] + p1[1] + p1[2] + p1[3] + p1[4] + p1[5] + p1[6] + p1[7];
         }
     }
     double parallel_SIMD_end_time = omp_get_wtime();  // 记录并行结束时间
