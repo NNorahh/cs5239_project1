@@ -25,6 +25,23 @@ typedef struct {
     long peak_memory;  // Peak resident set size
 } memory_stats_t;
 
+/* Rename timer_t to my_timer_t to avoid conflict */
+typedef struct {
+    struct timeval start;
+    struct timeval end;
+} my_timer_t;
+
+/* Update function signatures */
+void timer_start(my_timer_t* timer) {
+    gettimeofday(&timer->start, NULL);
+}
+
+double timer_end(my_timer_t* timer) {
+    gettimeofday(&timer->end, NULL);
+    return (timer->end.tv_sec - timer->start.tv_sec) + 
+           (timer->end.tv_usec - timer->start.tv_usec) / 1000000.0;
+}
+
 /*
  * Get memory statistics
  */
@@ -136,7 +153,8 @@ int32_t main(int32_t argc, char *argv[]) {
     get_memory_stats(&stats_seq_start);
     
     memset(r, 0, matrix_size);
-    clock_t t_seq = clock();
+    my_timer_t timer_seq;
+    timer_start(&timer_seq);
 
     for (uint32_t i = 0; i < N; ++i)
         for (uint32_t j = 0; j < N; ++j) {
@@ -147,13 +165,9 @@ int32_t main(int32_t argc, char *argv[]) {
             r[i * N + j] = sum;
         }
 
-    t_seq = clock() - t_seq;
-    get_memory_stats(&stats_seq_end);
-    
+    double seq_time = timer_end(&timer_seq);
     printf("\n=== Sequential Multiplication Results ===\n");
-    printf("Time: %6.2f seconds\n", ((float)t_seq)/CLOCKS_PER_SEC);
-    print_memory_stats_delta(&stats_seq_start, &stats_seq_end, "Sequential");
-    print_matrix_sample(N, r, "Sequential Result");
+    printf("Time: %6.2f seconds\n", seq_time);
 
     /* Parallel multiplication */
     printf("\nPerforming parallel multiplication...\n");
@@ -161,9 +175,10 @@ int32_t main(int32_t argc, char *argv[]) {
     get_memory_stats(&stats_par_start);
     
     memset(r, 0, matrix_size);
-    clock_t t_par = clock();
+    my_timer_t timer_par;
+    timer_start(&timer_par);
 
-    uint32_t num_threads = 4;
+    uint32_t num_threads = sysconf(_SC_NPROCESSORS_ONLN);
     pthread_t threads[num_threads];
     thread_data_t thread_data[num_threads];
 
@@ -178,13 +193,9 @@ int32_t main(int32_t argc, char *argv[]) {
         pthread_join(threads[i], NULL);
     }
 
-    t_par = clock() - t_par;
-    get_memory_stats(&stats_par_end);
-
+    double par_time = timer_end(&timer_par);
     printf("\n=== Parallel Multiplication Results ===\n");
-    printf("Time: %6.2f seconds\n", ((float)t_par)/CLOCKS_PER_SEC);
-    print_memory_stats_delta(&stats_par_start, &stats_par_end, "Parallel");
-    print_matrix_sample(N, r, "Parallel Result");
+    printf("Time: %6.2f seconds\n", par_time);
 
     /* Overall statistics */
     get_memory_stats(&stats_current);
