@@ -6,59 +6,64 @@ matrix_sizes = ['512', '1024', '2048']
 
 # L1 cache loads and misses for ijk and kij (normalized to percentages)
 l1_loads = {
-    'ijk': [2958801913, 23647988484, 189121292839],
-    'kij': [2958594144, 23645538405, 189076485716]
+    'ijk': [2958874388, 23648715259, 189122813166],
+    'kij': [2958592729, 23645761803, 189077345014]
 }
 l1_misses = {
-    'ijk': [135102013, 1080347809, 13949132985],
-    'kij': [17601764, 139988463, 1195638785]
+    'ijk': [134996042, 1084343286, 13938277896],
+    'kij': [17598133, 143784185, 1216271014]
 }
 
-# L2 cache loads (references) and misses for ijk and kij (normalized to percentages)
-l2_loads = {
-    'ijk': [135275630, 1081460664, 14670456209],
-    'kij': [35252010, 279388213, 2315535987]
+# LLC cache loads (references) and misses for ijk and kij (normalized to percentages)
+llc_loads = {
+    'ijk': [131577155, 1075390810, 8669856942],
+    'kij': [306639, 1608774, 8230791]
 }
-l2_misses = {
-    'ijk': [133724908, 1078489514, 8693090760],
-    'kij': [18250040, 141712329, 1116813844]
+llc_misses = {
+    'ijk': [80963, 124675275, 4185222822],
+    'kij': [13861, 588541, 5402496]
 }
 
-# Calculate miss ratios (as percentages)
-l1_miss_ratio_ijk = [misses/loads*100 for misses, loads in zip(l1_misses['ijk'], l1_loads['ijk'])]
-l1_miss_ratio_kij = [misses/loads*100 for misses, loads in zip(l1_misses['kij'], l1_loads['kij'])]
-
-l2_miss_ratio_ijk = [misses/loads*100 for misses, loads in zip(l2_misses['ijk'], l2_loads['ijk'])]
-l2_miss_ratio_kij = [misses/loads*100 for misses, loads in zip(l2_misses['kij'], l2_loads['kij'])]
-
-# Set up the figure with two subplots
+# Set up the figure with two subplots side by side
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
 
-# Set width of bars and positions of the bars
+# Set width of bars and positions
 width = 0.35
 x = np.arange(len(matrix_sizes))
 
-# Create bars for L1 cache miss ratios
-ax1.bar(x - width/2, l1_miss_ratio_ijk, width, label='ijk', color='skyblue')
-ax1.bar(x + width/2, l1_miss_ratio_kij, width, label='kij', color='lightcoral')
-ax1.set_title('L1 Cache Miss Ratio')
+# Plot L1 cache misses (using log scale) - REVERSED COLORS
+ax1.bar(x - width/2, l1_misses['ijk'], width, label='ijk', color='lightcoral')
+ax1.bar(x + width/2, l1_misses['kij'], width, label='kij', color='skyblue')
+ax1.set_yscale('log')
+ax1.set_title('L1 Cache Misses Comparison')
 ax1.set_xlabel('Matrix Size')
-ax1.set_ylabel('Miss Ratio (%)')
+ax1.set_ylabel('Number of Cache Misses')
 ax1.set_xticks(x)
 ax1.set_xticklabels(matrix_sizes)
 ax1.legend()
-ax1.grid(True, alpha=0.3)
 
-# Create bars for L2 cache miss ratios
-ax2.bar(x - width/2, l2_miss_ratio_ijk, width, label='ijk', color='skyblue')
-ax2.bar(x + width/2, l2_miss_ratio_kij, width, label='kij', color='lightcoral')
-ax2.set_title('L2 Cache Miss Ratio')
+# Add value labels on top of each bar
+for i, v in enumerate(l1_misses['ijk']):
+    ax1.text(i - width/2, v, f'{v:,.0f}', ha='center', va='bottom', rotation=0)
+for i, v in enumerate(l1_misses['kij']):
+    ax1.text(i + width/2, v, f'{v:,.0f}', ha='center', va='bottom', rotation=0)
+
+# Plot LLC cache misses (using log scale) - REVERSED COLORS
+ax2.bar(x - width/2, llc_misses['ijk'], width, label='ijk', color='lightcoral')
+ax2.bar(x + width/2, llc_misses['kij'], width, label='kij', color='skyblue')
+ax2.set_yscale('log')
+ax2.set_title('LLC Cache Misses Comparison')
 ax2.set_xlabel('Matrix Size')
-ax2.set_ylabel('Miss Ratio (%)')
+ax2.set_ylabel('Number of Cache Misses')
 ax2.set_xticks(x)
 ax2.set_xticklabels(matrix_sizes)
 ax2.legend()
-ax2.grid(True, alpha=0.3)
+
+# Add value labels on top of each bar
+for i, v in enumerate(llc_misses['ijk']):
+    ax2.text(i - width/2, v, f'{v:,.0f}', ha='center', va='bottom', rotation=0)
+for i, v in enumerate(llc_misses['kij']):
+    ax2.text(i + width/2, v, f'{v:,.0f}', ha='center', va='bottom', rotation=0)
 
 plt.tight_layout()
 plt.show()
