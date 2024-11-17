@@ -1,0 +1,164 @@
+*****************************
+Running pthread_only...
+Parallel Blocked (only) Execution Time: 6.3785 s
+---------------------------------------------------
+
+ Performance counter stats for './pthread_only 1024 4':
+
+    16,009,316,644      cycles                                                        (66.72%)
+             6,222      page-faults                                                 
+    39,225,192,704      instructions              #    2.45  insn per cycle           (83.36%)
+        31,539,748      cache-references                                              (83.41%)
+         6,294,881      cache-misses              #   19.959 % of all cache refs      (83.29%)
+                32      context-switches                                            
+                 0      mem-loads                                                     (83.34%)
+     2,291,472,834      mem-stores                                                    (83.36%)
+
+       1.661181210 seconds time elapsed
+
+       6.399902000 seconds user
+       0.019999000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp...
+OpenMp (only) Execution Time: 2.2067 s
+---------------------------------------------------
+
+ Performance counter stats for './openmp 1024 4':
+
+    22,420,912,782      cycles                                                        (66.64%)
+             6,226      page-faults                                                 
+    29,118,460,433      instructions              #    1.30  insn per cycle           (83.32%)
+     1,080,167,812      cache-references                                              (83.34%)
+         9,980,296      cache-misses              #    0.924 % of all cache refs      (83.34%)
+                35      context-switches                                            
+                 0      mem-loads                                                     (83.37%)
+     2,162,468,454      mem-stores                                                    (83.35%)
+
+       2.253425766 seconds time elapsed
+
+       8.823056000 seconds user
+       0.051947000 seconds sys
+
+
+*****************************
+*****************************
+Running simd_only...
+SIMD (only) Execution Time: 1.6039 s
+---------------------------------------------------
+
+ Performance counter stats for './simd_only 1024':
+
+     3,747,575,008      cycles                                                        (66.43%)
+             8,257      page-faults                                                 
+     6,324,717,625      instructions              #    1.69  insn per cycle           (83.26%)
+       137,014,325      cache-references                                              (83.34%)
+         1,633,408      cache-misses              #    1.192 % of all cache refs      (83.42%)
+                11      context-switches                                            
+                 0      mem-loads                                                     (83.42%)
+     1,360,043,723      mem-stores                                                    (83.39%)
+
+       1.645371131 seconds time elapsed
+
+       1.613923000 seconds user
+       0.027894000 seconds sys
+
+
+*****************************
+*****************************
+Running pthread_simd...
+Parallel Blocked & SIMD Execution Time: 2.1447 s
+---------------------------------------------------
+
+ Performance counter stats for './pthread_simd 1024 4':
+
+     4,697,806,007      cycles                                                        (67.00%)
+             8,269      page-faults                                                 
+     7,004,625,392      instructions              #    1.49  insn per cycle           (83.67%)
+         9,728,152      cache-references                                              (83.70%)
+         3,394,823      cache-misses              #   34.897 % of all cache refs      (83.26%)
+                21      context-switches                                            
+                 0      mem-loads                                                     (83.31%)
+     1,362,322,561      mem-stores                                                    (83.16%)
+
+       0.691064090 seconds time elapsed
+
+       2.139983000 seconds user
+       0.044082000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp_tiling...
+OpenMp & tiling Execution Time: 1.2440 s
+---------------------------------------------------
+Memory freed successfully.
+
+ Performance counter stats for './openmp_tiling 1024 4':
+
+    12,664,556,002      cycles                                                        (66.57%)
+             6,226      page-faults                                                 
+    34,668,784,749      instructions              #    2.74  insn per cycle           (83.31%)
+         8,483,785      cache-references                                              (83.49%)
+         2,086,957      cache-misses              #   24.599 % of all cache refs      (83.34%)
+                21      context-switches                                            
+                 0      mem-loads                                                     (83.37%)
+     2,292,466,849      mem-stores                                                    (83.35%)
+
+       1.421177619 seconds time elapsed
+
+       4.979310000 seconds user
+       0.043958000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp_simd...
+OpenMp & SIMD: 			0.4691 s
+---------------------------------------------------
+Memory freed successfully.
+
+ Performance counter stats for './openmp_simd 1024 4':
+
+     3,899,957,081      cycles                                                        (67.22%)
+             8,275      page-faults                                                 
+     6,478,691,051      instructions              #    1.66  insn per cycle           (83.61%)
+       137,138,666      cache-references                                              (83.21%)
+         1,130,248      cache-misses              #    0.824 % of all cache refs      (83.17%)
+                14      context-switches                                            
+                 0      mem-loads                                                     (83.30%)
+     1,353,100,225      mem-stores                                                    (83.58%)
+
+       0.512005730 seconds time elapsed
+
+       1.803664000 seconds user
+       0.028119000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp_simd_tiling...
+OpenMp & tiling & SIMD Execution Time: 0.6589 s
+---------------------------------------------------
+Memory freed successfully.
+
+ Performance counter stats for './openmp_simd_tiling 1024 4':
+
+     5,391,069,431      cycles                                                        (67.03%)
+             8,275      page-faults                                                 
+     9,340,586,641      instructions              #    1.73  insn per cycle           (83.58%)
+         7,881,296      cache-references                                              (83.49%)
+         3,137,585      cache-misses              #   39.811 % of all cache refs      (83.26%)
+                17      context-switches                                            
+                 0      mem-loads                                                     (83.22%)
+     1,527,239,902      mem-stores                                                    (83.18%)
+
+       0.708943572 seconds time elapsed
+
+       2.514738000 seconds user
+       0.020021000 seconds sys
+
+
+*****************************
