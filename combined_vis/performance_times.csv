@@ -1,0 +1,9 @@
+Method,Execution Time (s)
+baseline,15.2711
+pthread_only,0.8598
+openmp_only,1.0795
+simd_only,1.6558
+pthread_simd,0.3057
+openmp_tiling,0.5781
+openmp_simd,0.2336
+openmp_simd_tiling,0.3165

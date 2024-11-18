@@ -1,227 +1,225 @@
 *****************************
 Running baseline...
-Baseline Execution Time: 15.2711 s
+Baseline Execution Time: 12.1272 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
-  Minor Page Faults: 6152
-  Current Peak Memory: 25732 KB
+  Minor Page Faults: 6151
+  Current Peak Memory: 25736 KB
 ---------------------------------------------------
 
  Performance counter stats for './baseline 1024':
 
-    39,016,277,810      cycles                                                        (66.77%)
-             6,210      page-faults                                                 
-    49,403,462,380      instructions              #    1.27  insn per cycle           (83.38%)
-     1,080,005,799      cache-references                                              (83.25%)
-        98,973,009      cache-misses              #    9.164 % of all cache refs      (83.40%)
-                44      context-switches                                            
-                 0      mem-loads                                                     (83.20%)
-     2,158,874,239      mem-stores                                                    (83.39%)
+    34,296,732,609      cycles                                                        (66.74%)
+             6,211      page-faults                                                 
+    49,451,772,926      instructions              #    1.44  insn per cycle           (83.36%)
+     1,078,354,259      cache-references                                              (83.36%)
+        19,619,583      cache-misses              #    1.819 % of all cache refs      (83.36%)
+                39      context-switches                                            
+                 0      mem-loads                                                     (83.22%)
+     2,160,576,920      mem-stores                                                    (83.32%)
 
-      15.329370719 seconds time elapsed
+      12.171483229 seconds time elapsed
 
-      15.293038000 seconds user
-       0.018858000 seconds sys
+      12.132003000 seconds user
+       0.034716000 seconds sys
+
+
+*****************************
+*****************************
+Running ikj...
+IKJ Execution Time: 4.7079 s
+
+=== Overall Memory Statistics ===
+  Major Page Faults: 0
+  Minor Page Faults: 6152
+  Current Peak Memory: 25656 KB
+---------------------------------------------------
+
+ Performance counter stats for './ikj 1024':
+
+    13,346,081,380      cycles                                                        (66.62%)
+             6,208      page-faults                                                 
+    49,436,989,804      instructions              #    3.70  insn per cycle           (83.31%)
+       141,417,067      cache-references                                              (83.34%)
+         7,371,626      cache-misses              #    5.213 % of all cache refs      (83.39%)
+                13      context-switches                                            
+                 0      mem-loads                                                     (83.24%)
+     2,157,594,806      mem-stores                                                    (83.41%)
+
+       4.750983198 seconds time elapsed
+
+       4.730612000 seconds user
+       0.016029000 seconds sys
+
+
+*****************************
+*****************************
+Running tiling_only...
+Tiling Execution Time: 4.6556 s
+
+=== Overall Memory Statistics ===
+  Major Page Faults: 0
+  Minor Page Faults: 6151
+  Current Peak Memory: 25772 KB
+---------------------------------------------------
+
+ Performance counter stats for './tiling 1024':
+
+    13,269,597,239      cycles                                                        (66.60%)
+             6,209      page-faults                                                 
+    32,884,729,599      instructions              #    2.48  insn per cycle           (83.30%)
+         8,445,169      cache-references                                              (83.32%)
+         3,101,543      cache-misses              #   36.726 % of all cache refs      (83.37%)
+                22      context-switches                                            
+                 0      mem-loads                                                     (83.39%)
+     2,223,803,688      mem-stores                                                    (83.32%)
+
+       4.700299456 seconds time elapsed
+
+       4.665378000 seconds user
+       0.030471000 seconds sys
 
 
 *****************************
 *****************************
 Running pthread_only...
-Parallel Blocked (only) Execution Time: 0.8598 s
+Parallel Blocked (only) Execution Time: 0.7168 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
-  Minor Page Faults: 6200
-  Current Peak Memory: 26352 KB
+  Minor Page Faults: 6199
+  Current Peak Memory: 26288 KB
 ---------------------------------------------------
 
  Performance counter stats for './pthread_only 1024 20':
 
-    32,310,283,746      cycles                                                        (66.89%)
-             6,259      page-faults                                                 
-    39,226,408,843      instructions              #    1.21  insn per cycle           (83.41%)
-        39,867,130      cache-references                                              (83.35%)
-         6,936,174      cache-misses              #   17.398 % of all cache refs      (83.12%)
-             3,322      context-switches                                            
-                 0      mem-loads                                                     (83.35%)
-     2,298,989,116      mem-stores                                                    (83.49%)
+    33,504,093,454      cycles                                                        (66.88%)
+             6,255      page-faults                                                 
+    39,098,765,526      instructions              #    1.17  insn per cycle           (83.56%)
+        30,319,248      cache-references                                              (83.45%)
+         1,498,249      cache-misses              #    4.942 % of all cache refs      (83.22%)
+               630      context-switches                                            
+                 0      mem-loads                                                     (83.32%)
+     2,296,992,806      mem-stores                                                    (83.37%)
 
-       0.917024907 seconds time elapsed
+       0.761621566 seconds time elapsed
 
-      13.194166000 seconds user
-       0.078583000 seconds sys
+      13.817668000 seconds user
+       0.035545000 seconds sys
 
 
 *****************************
 *****************************
 Running openmp_only...
-OpenMp (only) Execution Time: 1.0795 s
+OpenMp (only) Execution Time: 0.9438 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
   Minor Page Faults: 6190
-  Current Peak Memory: 23464 KB
+  Current Peak Memory: 23528 KB
 ---------------------------------------------------
 
  Performance counter stats for './openmp_only 1024 20':
 
-    45,316,659,769      cycles                                                        (66.69%)
-             6,262      page-faults                                                 
-    29,287,342,857      instructions              #    0.65  insn per cycle           (83.32%)
-     1,040,035,690      cache-references                                              (83.11%)
-        12,293,935      cache-misses              #    1.182 % of all cache refs      (83.37%)
-             5,835      context-switches                                            
-                 0      mem-loads                                                     (83.40%)
-     2,172,570,340      mem-stores                                                    (83.60%)
+    44,305,848,421      cycles                                                        (66.84%)
+             6,261      page-faults                                                 
+    29,205,425,852      instructions              #    0.66  insn per cycle           (83.33%)
+     1,037,914,270      cache-references                                              (83.19%)
+         3,639,236      cache-misses              #    0.351 % of all cache refs      (83.27%)
+             1,488      context-switches                                            
+                 0      mem-loads                                                     (83.35%)
+     2,163,808,833      mem-stores                                                    (83.46%)
 
-       1.136697979 seconds time elapsed
+       0.986840628 seconds time elapsed
 
-      18.362506000 seconds user
-       0.178653000 seconds sys
+      18.182887000 seconds user
+       0.047755000 seconds sys
 
 
 *****************************
 *****************************
 Running simd_only...
-SIMD (only) Execution Time: 1.6558 s
+SIMD (only) Execution Time: 1.4038 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
   Minor Page Faults: 8200
-  Current Peak Memory: 34036 KB
+  Current Peak Memory: 33960 KB
 ---------------------------------------------------
 
  Performance counter stats for './simd_only 1024':
 
-     3,792,817,968      cycles                                                        (66.67%)
-             8,256      page-faults                                                 
-     6,301,142,817      instructions              #    1.66  insn per cycle           (83.34%)
-       136,912,546      cache-references                                              (83.34%)
-        10,388,504      cache-misses              #    7.588 % of all cache refs      (83.34%)
-                12      context-switches                                            
-                 0      mem-loads                                                     (83.20%)
-     1,359,001,856      mem-stores                                                    (83.45%)
+     3,671,844,428      cycles                                                        (67.34%)
+             8,257      page-faults                                                 
+     6,291,235,499      instructions              #    1.71  insn per cycle           (83.67%)
+       138,878,469      cache-references                                              (81.87%)
+         2,306,357      cache-misses              #    1.661 % of all cache refs      (82.78%)
+                14      context-switches                                            
+                 0      mem-loads                                                     (84.19%)
+     1,351,682,218      mem-stores                                                    (83.82%)
 
-       1.694258601 seconds time elapsed
+       1.449609184 seconds time elapsed
 
-       1.657689000 seconds user
-       0.023456000 seconds sys
+       1.409388000 seconds user
+       0.036873000 seconds sys
 
 
 *****************************
 *****************************
 Running pthread_simd...
-Parallel Blocked & SIMD Execution Time: 0.3057 s
+Parallel Blocked & SIMD Execution Time: 0.2897 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
   Minor Page Faults: 8248
-  Current Peak Memory: 34456 KB
+  Current Peak Memory: 34380 KB
 ---------------------------------------------------
 
  Performance counter stats for './pthread_simd 1024 20':
 
-     7,674,896,538      cycles                                                        (66.48%)
-             8,305      page-faults                                                 
-     6,996,813,603      instructions              #    0.91  insn per cycle           (83.42%)
-        11,542,503      cache-references                                              (83.51%)
-         2,219,862      cache-misses              #   19.232 % of all cache refs      (84.04%)
-               529      context-switches                                            
-                 0      mem-loads                                                     (83.67%)
-     1,366,425,537      mem-stores                                                    (83.18%)
+    10,035,954,313      cycles                                                        (67.17%)
+             8,303      page-faults                                                 
+     9,830,289,282      instructions              #    0.98  insn per cycle           (83.64%)
+         8,589,111      cache-references                                              (83.53%)
+           967,957      cache-misses              #   11.270 % of all cache refs      (83.04%)
+               321      context-switches                                            
+                 0      mem-loads                                                     (83.53%)
+     1,594,870,809      mem-stores                                                    (83.54%)
 
-       0.399727558 seconds time elapsed
+       0.335697284 seconds time elapsed
 
-       3.672243000 seconds user
-       0.035159000 seconds sys
-
-
-*****************************
-*****************************
-Running openmp_tiling...
-OpenMp & tiling Execution Time: 0.5781 s
-
-=== Overall Memory Statistics ===
-  Major Page Faults: 0
-  Minor Page Faults: 6189
-  Current Peak Memory: 26128 KB
----------------------------------------------------
-Memory freed successfully.
-
- Performance counter stats for './openmp_tiling 1024 20':
-
-    22,412,723,893      cycles                                                        (67.05%)
-             6,261      page-faults                                                 
-    34,685,522,750      instructions              #    1.55  insn per cycle           (83.74%)
-        11,787,273      cache-references                                              (83.68%)
-         3,422,846      cache-misses              #   29.038 % of all cache refs      (83.25%)
-             1,887      context-switches                                            
-                 0      mem-loads                                                     (82.81%)
-     2,293,097,794      mem-stores                                                    (83.23%)
-
-       0.708740995 seconds time elapsed
-
-       9.368264000 seconds user
-       0.047338000 seconds sys
+       4.854736000 seconds user
+       0.035885000 seconds sys
 
 
 *****************************
 *****************************
 Running openmp_simd...
-OpenMp & SIMD Execution Time: 0.2336 s
+OpenMp & SIMD Execution Time: 0.2146 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
-  Minor Page Faults: 8240
-  Current Peak Memory: 34492 KB
+  Minor Page Faults: 8238
+  Current Peak Memory: 34424 KB
 ---------------------------------------------------
 Memory freed successfully.
 
  Performance counter stats for './openmp_simd 1024 20':
 
-     7,852,544,638      cycles                                                        (66.32%)
-             8,310      page-faults                                                 
-     6,494,454,967      instructions              #    0.83  insn per cycle           (83.51%)
-       129,635,973      cache-references                                              (84.02%)
-         2,484,307      cache-misses              #    1.916 % of all cache refs      (83.97%)
-             1,168      context-switches                                            
-                 0      mem-loads                                                     (82.98%)
-     1,381,573,648      mem-stores                                                    (82.83%)
+     7,745,228,054      cycles                                                        (67.16%)
+             8,309      page-faults                                                 
+     6,454,120,735      instructions              #    0.83  insn per cycle           (83.73%)
+       123,179,877      cache-references                                              (83.11%)
+         1,680,126      cache-misses              #    1.364 % of all cache refs      (83.17%)
+               263      context-switches                                            
+                 0      mem-loads                                                     (83.38%)
+     1,363,373,474      mem-stores                                                    (83.37%)
 
-       0.337427194 seconds time elapsed
+       0.261551920 seconds time elapsed
 
-       3.769977000 seconds user
-       0.035417000 seconds sys
-
-
-*****************************
-*****************************
-Running openmp_simd_tiling...
-OpenMp & tiling & SIMD Execution Time: 0.3165 s
-
-=== Overall Memory Statistics ===
-  Major Page Faults: 0
-  Minor Page Faults: 8239
-  Current Peak Memory: 34376 KB
----------------------------------------------------
-Memory freed successfully.
-
- Performance counter stats for './openmp_simd_tiling 1024 20':
-
-    10,774,548,206      cycles                                                        (66.83%)
-             8,310      page-faults                                                 
-     9,464,244,316      instructions              #    0.88  insn per cycle           (83.74%)
-        12,293,992      cache-references                                              (83.60%)
-         2,731,866      cache-misses              #   22.221 % of all cache refs      (83.52%)
-             2,913      context-switches                                            
-                 0      mem-loads                                                     (82.95%)
-     1,530,331,616      mem-stores                                                    (83.12%)
-
-       0.550659575 seconds time elapsed
-
-       5.073444000 seconds user
-       0.062298000 seconds sys
+       3.796580000 seconds user
+       0.031474000 seconds sys
 
 
 *****************************
