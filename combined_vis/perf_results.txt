@@ -1,6 +1,6 @@
 *****************************
 Running baseline...
-Baseline Execution Time: 12.1272 s
+Baseline Execution Time: 15.2711 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
@@ -19,11 +19,10 @@ Baseline Execution Time: 12.1272 s
                  0      mem-loads                                                     (83.22%)
      2,160,576,920      mem-stores                                                    (83.32%)
 
-      12.171483229 seconds time elapsed
+      15.271183229 seconds time elapsed
 
-      12.132003000 seconds user
+      15.241103000 seconds user
        0.034716000 seconds sys
-
 
 *****************************
 *****************************
@@ -56,7 +55,7 @@ IKJ Execution Time: 4.7079 s
 *****************************
 *****************************
 Running tiling_only...
-Tiling Execution Time: 4.6556 s
+Tiling Execution Time: 3.7277 s
 
 === Overall Memory Statistics ===
   Major Page Faults: 0
@@ -71,13 +70,13 @@ Tiling Execution Time: 4.6556 s
     32,884,729,599      instructions              #    2.48  insn per cycle           (83.30%)
          8,445,169      cache-references                                              (83.32%)
          3,101,543      cache-misses              #   36.726 % of all cache refs      (83.37%)
-                22      context-switches                                            
+                13      context-switches                                            
                  0      mem-loads                                                     (83.39%)
      2,223,803,688      mem-stores                                                    (83.32%)
 
-       4.700299456 seconds time elapsed
+       3.727775051 seconds time elapsed
 
-       4.665378000 seconds user
+       3.767775051 seconds user
        0.030471000 seconds sys
 
 
@@ -220,6 +219,93 @@ Memory freed successfully.
 
        3.796580000 seconds user
        0.031474000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp_simd_O3...
+OpenMp & SIMD Execution Time: 0.0922 s
+
+=== Overall Memory Statistics ===
+  Major Page Faults: 0
+  Minor Page Faults: 8239
+  Current Peak Memory: 34352 KB
+---------------------------------------------------
+Memory freed successfully.
+
+ Performance counter stats for './openmp_simd_O3 1024 20':
+
+     2,138,545,808      cycles                                                        (64.17%)
+             8,312      page-faults                                                 
+     1,202,540,821      instructions              #    0.56  insn per cycle           (84.40%)
+       130,872,782      cache-references                                              (84.96%)
+         1,780,880      cache-misses              #    1.361 % of all cache refs      (85.01%)
+               238      context-switches                                            
+                 0      mem-loads                                                     (85.07%)
+         9,084,333      mem-stores                                                    (82.56%)
+
+       0.132646480 seconds time elapsed
+
+       1.487120000 seconds user
+       0.044331000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp_simd_vectorize...
+OpenMp & SIMD Execution Time: 0.2376 s
+
+=== Overall Memory Statistics ===
+  Major Page Faults: 0
+  Minor Page Faults: 8240
+  Current Peak Memory: 34392 KB
+---------------------------------------------------
+Memory freed successfully.
+
+ Performance counter stats for './openmp_simd_vectorize 1024 20':
+
+     7,646,380,566      cycles                                                        (66.79%)
+             8,310      page-faults                                                 
+     6,478,624,342      instructions              #    0.85  insn per cycle           (83.71%)
+       130,737,280      cache-references                                              (84.25%)
+         2,303,147      cache-misses              #    1.762 % of all cache refs      (83.93%)
+               777      context-switches                                            
+                 0      mem-loads                                                     (83.05%)
+     1,378,365,483      mem-stores                                                    (82.98%)
+
+       0.281353486 seconds time elapsed
+
+       3.665616000 seconds user
+       0.052771000 seconds sys
+
+
+*****************************
+*****************************
+Running openmp_simd_unroll...
+OpenMp & SIMD Execution Time: 0.2191 s
+
+=== Overall Memory Statistics ===
+  Major Page Faults: 0
+  Minor Page Faults: 8240
+  Current Peak Memory: 34496 KB
+---------------------------------------------------
+Memory freed successfully.
+
+ Performance counter stats for './openmp_simd_unroll 1024 20':
+
+     7,590,737,601      cycles                                                        (67.36%)
+             8,311      page-faults                                                 
+     6,385,595,182      instructions              #    0.84  insn per cycle           (84.76%)
+       125,826,728      cache-references                                              (84.23%)
+         1,999,153      cache-misses              #    1.589 % of all cache refs      (82.88%)
+               959      context-switches                                            
+                 0      mem-loads                                                     (83.30%)
+     1,367,885,753      mem-stores                                                    (83.06%)
+
+       0.264270896 seconds time elapsed
+
+       3.742972000 seconds user
+       0.048505000 seconds sys
 
 
 *****************************
